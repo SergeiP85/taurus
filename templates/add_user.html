@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить пользователя</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <!-- Блок входа/выхода -->
+            <div style="text-align: right;">
+                {% if session.get('user_id') %}
+                    <!-- Если сессия есть, показываем кнопку "Выйти" -->
+                    <a href="{{ url_for('logout') }}">Выйти</a>
+                {% else %}
+                    <!-- Если сессия не активна, показываем кнопку "Войти" -->
+                    <a href="{{ url_for('login') }}">Войти</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+    
+    <h2>Добавить пользователя</h2>
+    <form method="POST">
+        <label>Имя пользователя:</label>
+        <input type="text" name="username" required>
+        <br>
+        <label>Пароль:</label>
+        <input type="password" name="password" required>
+        <br>
+        <button type="submit">Создать пользователя</button>
+    </form>
+
+    <form action="{{ url_for('delete_user') }}" method="POST">
+        <input type="number" name="user_id" placeholder="ID пользователя">
+        <button type="submit">Удалить пользователя</button>
+    </form>
+    <a href="{{ url_for('home') }}">Назад в админку</a>
+</body>
+</html>

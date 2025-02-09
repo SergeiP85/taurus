@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page.title }}</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <!-- Блок входа/выхода -->
+            <div style="text-align: right;">
+                {% if session.get('user_id') %}
+                    <!-- Если сессия есть, показываем кнопку "Выйти" -->
+                    <a href="{{ url_for('logout') }}">Выйти</a>
+                {% else %}
+                    <!-- Если сессия не активна, показываем кнопку "Войти" -->
+                    <a href="{{ url_for('login') }}">Войти</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+    
+    <h1>{{ page.title }}</h1>
+    <p>{{ page.content }}</p>
+
+    <!-- Проверяем, является ли пользователь админом -->
+    {% if session.get('is_admin') %}
+        <form action="{{ url_for('delete_page', page_id=page.id) }}" method="post">
+            <button type="submit" onclick="return confirm('Вы уверены, что хотите удалить эту страницу?');">Удалить страницу</button>
+        </form>
+    {% endif %}
+
+    <br>
+    <a href="{{ url_for('public_site') }}">Назад</a>
+</body>
+</html>

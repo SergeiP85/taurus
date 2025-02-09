@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Моя CMS</title>
+    <link rel="stylesheet" href="/static/flash_cms.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <!-- Блок входа/выхода -->
+            <div style="text-align: right;">
+                {% if session.get('user_id') %}
+                    <!-- Если сессия есть, показываем кнопку "Выйти" -->
+                    <a href="{{ url_for('logout') }}">Выйти</a>
+                {% else %}
+                    <!-- Если сессия не активна, показываем кнопку "Войти" -->
+                    <a href="{{ url_for('login') }}">Войти</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+    
+
+    <h1>Добро пожаловать в вашу CMS!</h1>
+    <p>Здесь будет контент для редактирования.</p>
+
+    <h2>Список страниц:</h2>
+    <ul>
+        {% for page in pages %}
+            <li>
+                <a href="{{ url_for('view_page', page_id=page.id) }}">{{ page.title }}</a>
+
+                <!-- Кнопка удаления только для админа -->
+                {% if session.get('is_admin') %}
+                    <form action="{{ url_for('delete_page', page_id=page.id) }}" method="POST" style="display:inline;">
+                        <button type="submit" onclick="return confirm('Вы уверены, что хотите удалить страницу?');">Удалить</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    
+    <!-- Кнопка добавления страницы только для админа -->
+    {% if session.get('is_admin') %}
+        <a href="{{ url_for('add_page') }}">Добавить новую страницу</a>
+    {% endif %}
+
+    <!--  добавление ссылки в админке -->
+{% if session.get('is_admin') %}
+<a href="{{ url_for('add_user') }}">Управление пользователями</a>
+{% endif %}
+
+<div class="container">
+    <!-- Отображение флеш-сообщений -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="alert alert-{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Основное содержимое страницы -->
+    <h2>Панель администратора</h2>
+    <!-- Другие элементы панели администратора -->
+</div>
+</body>
+</html>
